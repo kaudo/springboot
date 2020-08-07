@@ -7,7 +7,7 @@ plugins {
 
 group 'com.kaudo'
 version '1.0-SNAPSHOT'
-sourceCompatibility='14'
+sourceCompatibility='8'
 
 configurations{
     compileOnly{
