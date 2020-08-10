@@ -11,7 +11,12 @@
 </head>
 <body>
     <h1>spring.kaudo.com</h1>
-/webapp/WEB-INF/views/index.jsp
+    <br/>
+springboot, jsp, jstl, jquery<br/>
+aws, ec2, mariadb<br/>
+github > gradle > war > java<br/>
+<br/>
     ${result}
+    <br/>
 </body>
 </html>
