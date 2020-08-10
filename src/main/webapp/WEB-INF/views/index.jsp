@@ -11,7 +11,7 @@
 </head>
 <body>
     <h1>spring.kaudo.com</h1>
-
+/webapp/WEB-INF/views/index.jsp
     ${result}
 </body>
 </html>
