@@ -8,6 +8,7 @@ bin/
 gen/
 .gradle/**
 .gradle
+.gradle/*
 
 local.properties
 proguard/
@@ -16,3 +17,5 @@ proguard/
 .idea/tasks.xml
 .idea/datasources.xml
 .idea/dataSources.ids
+MANIFEST.MF
+*.war
