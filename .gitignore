@@ -6,8 +6,9 @@ Thumbs.db
 *.class
 bin/
 gen/
-.gradle/
-build/
+.gradle/**
+.gradle
+
 local.properties
 proguard/
 .metadata/
