@@ -73,9 +73,13 @@ github > gradle > war > java<br/>
 <a href="/getRouteInfoItem">getRouteInfoItem</a>
 <a href="/getBusRouteList">버스번호전체보기</a>
 <br/>
-<a href="getStaionByRoute?busRouteId=100100506">TEST</a><br/>
-<input type="tel" name="busRouteNm"/>
+<br/>
+<a href="getStaionByRoute?busRouteId=100100506" target="_blank">getStaionByRoute</a><br/>
+<a href="getRouteInfo?busRouteId=100100506" target="_blank">getRouteInfo</a><br/>
+<a href="getRoutePath?busRouteId=100100506" target="_blank">getRoutePath</a><br/>
 
+<input type="tel" name="busRouteNm"/>
 <div class="areaResult"></div>
+
 </body>
 </html>
