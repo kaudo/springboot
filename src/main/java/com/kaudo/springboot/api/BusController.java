@@ -15,29 +15,60 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 public class BusController {
 
+	static String URL="http://ws.bus.go.kr/api/rest/busRouteInfo/";
+	static String SERVICE_KEY="GYF%2BDjKmLF7uE0CchJUGgbFS2%2BxLFwXxmD5bGzyCCdpyLhYHsjlTHQHvVBlIGjKLQc%2BsmvaI3zxR42spMFuLww%3D%3D";
 	// apikey
 	// GYF%2BDjKmLF7uE0CchJUGgbFS2%2BxLFwXxmD5bGzyCCdpyLhYHsjlTHQHvVBlIGjKLQc%2BsmvaI3zxR42spMFuLww%3D%3D
+	// https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15000193
 /*
 getStaionsByRouteList	노선별 경유 정류소 조회 서비스	1000	확인
 2	getRouteInfoItem	노선 기본정보 조회	1000	확인
 3	getRoutePathList	노선의 지도상 경로를 리턴한다.	1000	확인
 4	getBusRouteList		노선번호에 해당하는 노선 목록 조회
 */
-	@RequestMapping(value="/getStaionsByRouteList")
-	public ModelAndView getStaionsByRouteList(HttpServletResponse response, HttpServletRequest request){
-		ModelAndView model=new ModelAndView("index");
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("domain","https://spring.kaudo.com");
-		resultMap.put("message","안녕하세요.");
-		resultMap.put("domain2","https://github.com/kaudo/springboot");
+	@RequestMapping(value="/getStaionByRoute")
+	public Map<String,Object> getStaionByRoute(HttpServletResponse response, HttpServletRequest request) throws Exception{
+		HttpURLConnection conn=(HttpURLConnection)new URL(URL+"getStaionByRoute?ServiceKey="+SERVICE_KEY+"&busRouteId="+request.getParameter("busRouteId")).openConnection();
+		conn.setRequestMethod("GET");
+		conn.setRequestProperty("Content-type", "application/json");
+		System.out.println("Response code: " + conn.getResponseCode());
+		BufferedReader rd;
+		if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		} else {
+			rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+		}
+		StringBuilder sb = new StringBuilder();
+		String line;
+		while ((line = rd.readLine()) != null) {
+			sb.append(line);
+		}
+		rd.close();
+		conn.disconnect();
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n"+sb.toString()+"\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-		model.addObject("result",resultMap);
-		return model;
+		String xml = sb.toString();
+		JSONObject jObject = org.json.XML.toJSONObject(xml);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+		Map<String, Object> map=new ObjectMapper().readValue(jObject.toString(), new TypeReference<HashMap<String,Object>>(){});
+		Map<String,Object> mapServiceResult=(Map<String,Object>)map.get("ServiceResult");
+		Map<String,Object> mapHeader=(Map<String,Object>)mapServiceResult.get("msgHeader");
+		Map<String,Object> mapBody=(Map<String,Object>)mapServiceResult.get("msgBody");
+		List<Map<String,Object>> listItem=(List<Map<String,Object>>)mapBody.get("itemList");
+
+		Map<String, Object> mapResult = new HashMap<>();
+		mapResult.put("list",listItem);
+		mapResult.put("header",mapHeader);
+		mapResult.put("message",mapServiceResult.get("comMsgHeader"));
+		return mapResult;
 	}
 
 
@@ -92,11 +123,6 @@ getStaionsByRouteList	노선별 경유 정류소 조회 서비스	1000	확인
 
 	@RequestMapping(value="/getBusRouteList")
 	public Map<String,Object> getBusRouteList(HttpServletResponse response, HttpServletRequest request) throws Exception {
-		Map<String, Object> mapResult = new HashMap<>();
-		mapResult.put("domain","https://spring.kaudo.com");
-		mapResult.put("message","안녕하세요.");
-		mapResult.put("domain2","https://github.com/kaudo/springboot");
-
 /*
 String strUrl="";
 		try {
@@ -170,8 +196,16 @@ String strUrl="";
 		ObjectMapper objectMapper = new ObjectMapper();
 		Map<String, Object> map = new HashMap<>();
 		map = objectMapper.readValue(jObject.toString(), new TypeReference<HashMap<String,Object>>(){});
-mapResult.put("map",map.get("ServiceResult"));
+		Map<String,Object> mapServiceResult=(Map<String,Object>)map.get("ServiceResult");
+		Map<String,Object> mapHeader=(Map<String,Object>)mapServiceResult.get("msgHeader");
+		Map<String,Object> mapBody=(Map<String,Object>)mapServiceResult.get("msgBody");
+		List<Map<String,Object>> listItem=(List<Map<String,Object>>)mapBody.get("itemList");
 
+		Map<String, Object> mapResult = new HashMap<>();
+		mapResult.put("list",listItem);
+		mapResult.put("header",mapHeader);
+		mapResult.put("message",mapServiceResult.get("comMsgHeader"));
+		//mapResult.put("mapServiceResult",mapServiceResult);
 		return mapResult;
 	}
 
