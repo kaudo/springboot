@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<title>spring.kaudo.com</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=480,user-scalable=no">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>spring.kaudo.com</title>
+<meta name="viewport" content="width=480,user-scalable=no"/>
+<link rel="icon" href="/favicon.ico">
 <script src="/js/jquery-3.5.1.min.js"></script>
 <script src="/js/data.js"></script>
 <script type="text/javascript">
@@ -79,7 +79,7 @@ github > gradle > war > java<br/>
 <a href="getRoutePath?busRouteId=100100506" target="_blank">getRoutePath</a><br/>
 
 <input type="tel" name="busRouteNm"/>
-<div class="areaResult"></div>
+<div class="areaResult" style="width:100%;height:500px;background-image:url('/images/road.png')"></div>
 
 </body>
 </html>
