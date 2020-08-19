@@ -55,7 +55,10 @@ $(document).ready(function(){
 
 	var gKeyword='';
 	$('input[name="busRouteNm"]').bind('keyup',function(){
-		if(!$(this).val()) return false;
+		if(!$(this).val() || $(this).val().length<2){
+			$('.areaBusRoute').html('');
+			return false;
+		}
 		if( ($(this).val().charCodeAt($(this).val().length-1)>='ㄱ'.charCodeAt(0)
 				&& $(this).val().charCodeAt($(this).val().length-1)<='ㅎ'.charCodeAt(0) )
 		|| ($(this).val().charCodeAt($(this).val().length-1)>='ㅏ'.charCodeAt(0)
@@ -86,10 +89,16 @@ $(document).ready(function(){
 
 					$('.areaBusStop').html('');
 					for(var i=0;i<data.list.length;i++){
-						$('.areaBusStop').append(JSON.stringify(data.list));
-
+						$('.areaBusStop').append('<button class="btnBusStop">'+data.list[i].stationNm+'</button></br>');
+						$('.btnBusStop:last').data('data',data.list[i]);
 					}
+
+					$('.btnBusStop').unbind('click').click(function(){
+						console.log($(this).data('data'));
+						return false;
+					});
 				});
+
 
 				return false;
 			});
