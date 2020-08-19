@@ -35,6 +35,7 @@ h1.title{width:100%;font-size:25px;font-weight:bold;margin:10px 0 15px 5px;}
 $(window).resize(resizeWindow=function(){
     $('#content').css({height:$('html').height()-$('#header').height()-$('#footer').height(),visibility:'visible'});
     //$('#menu').css({height:$('html').height()});
+    $('.areaRoad').css('height',$('#content').height());
 });
 
 $(document).ready(function(){
@@ -52,30 +53,60 @@ $(document).ready(function(){
     	return false;
 	});
 
+	var gKeyword='';
 	$('input[name="busRouteNm"]').bind('keyup',function(){
-		var busRouteNm=$(this).val();
-		$('.areaResult').html('');
-		if(!busRouteNm) return false;
-		$(data.list).each(function(idx,obj){
-			if(obj.busRouteNm.toString().indexOf(busRouteNm)>-1){
-				$('.areaResult').append('<div class="btnBusRouteNm" data-busRouteNm="'+obj.busRouteNm+'">'+JSON.stringify(obj)+'</div>');
-				$('.btnBusRouteNm:last').data('data',obj);
+		if(!$(this).val()) return false;
+		if( ($(this).val().charCodeAt($(this).val().length-1)>='ㄱ'.charCodeAt(0)
+				&& $(this).val().charCodeAt($(this).val().length-1)<='ㅎ'.charCodeAt(0) )
+		|| ($(this).val().charCodeAt($(this).val().length-1)>='ㅏ'.charCodeAt(0)
+           				&& $(this).val().charCodeAt($(this).val().length-1)<='ㅣ'.charCodeAt(0) )){
+			if($(this).val().substr(0,$(this).val().length-1)==gKeyword) return false;
+			gKeyword=$(this).val().substr(0,$(this).val().length-1);
+		}else gKeyword=$(this).val();
+		$('.areaBusRoute').html('');
+		$.ajax({
+			url:'/getBusRouteList?strSrch='+gKeyword,
+			type:'post'
+		}).done(function(data){
+			for(var i=0;i<data.list.length;i++){
+				$('.areaBusRoute').append('<div class="btnBusRoute" data-busRouteNm="'+data.list[i].busRouteNm+'">'+JSON.stringify(data.list[i])+'</div>');
+				$('.btnBusRoute:last').data('data',data.list[i]);
 			}
-		});
 
-		$('.btnBusRouteNm').unbind('click').click(function(){
-			console.log($(this),$(this).data('data').busRouteNm);
 
-			$.ajax({
-				url:'/getBusRouteList',
-				type:'post'
-			}).done(function(data){
-			  console.log(data);
-			  $('#loading').hide();
+			$('.btnBusRoute').unbind('click').click(function(){
+				console.log($(this),$(this).data('data').busRouteNm);
+				busRouteId=$(this).data('data').busRouteId;
+				$.ajax({
+					url:'/getStaionByRoute?busRouteId='+busRouteId,
+					type:'post'
+				}).done(function(data){
+					console.log(data);
+					$('#loading').hide();
+
+					$('.areaBusStop').html('');
+					for(var i=0;i<data.list.length;i++){
+						$('.areaBusStop').append(JSON.stringify(data.list));
+
+					}
+				});
+
+				return false;
 			});
 
-			return false;
 		});
+
+
+/*
+		$(data.list).each(function(idx,obj){
+			if(obj.busRouteNm.toString().indexOf(busRouteNm)>-1){
+				$('.areaBusRoute').append('<div class="btnBusRoute" data-busRouteNm="'+obj.busRouteNm+'">'+JSON.stringify(obj)+'</div>');
+				$('.btnBusRoute:last').data('data',obj);
+			}
+		});
+*/
+
+
 	});
 
 	resizeWindow();
@@ -87,25 +118,20 @@ $(document).ready(function(){
 
 <header id="header" style="">
 
-</header>
-<div id="container"><div id="wrapper"><div id="content">
-
-</div></div></div>
-<div id="footer"></div>
 
     <h1>spring.kaudo.com</h1>
     <br/>
 springboot, jsp, jstl, jquery<br/>
 aws, ec2, mariadb<br/>
 github > gradle > war > java<br/>
-<br/>
     ${result}
-    <br/>
 
-<br/>
+</header>
+<div id="container"><div id="wrapper"><div id="content">
+
+<div class="areaRoad" style="overflow:auto;width:100%;min-height:100px;background:url('/images/road.png') repeat-y 50% 50%">
+
     <button class="btnBusList">버스번호</button>
-
-    asdf
 <a href="/getRouteInfoItem">getRouteInfoItem</a>
 <a href="/getBusRouteList">버스번호전체보기</a>
 <br/>
@@ -115,7 +141,18 @@ github > gradle > war > java<br/>
 <a href="getRoutePath?busRouteId=100100506" target="_blank">getRoutePath</a><br/>
 
 <input type="tel" name="busRouteNm"/>
-<div class="areaResult" style="width:100%;height:500px;background-image:url('/images/road.png')"></div>
 
+<br/><br/>
+
+<button style="background:url('/images/bus_left.png') no-repeat 0px 0px / contain;width:70px;height:100px;color:transparent;border:0">버스</button>
+
+<div class="areaBusRoute"></div>
+
+<div class="areaBusStop"></div>
+
+</div>
+
+</div></div></div>
+<div id="footer"></div>
 </body>
 </html>

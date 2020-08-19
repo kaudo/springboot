@@ -72,7 +72,7 @@ String strUrl="";
 		response.getWriter().print(jsonObject.toString());
 		response.flushBuffer();
 		*/
-		HttpURLConnection conn=(HttpURLConnection)new URL(URL+"getBusRouteList?ServiceKey="+SERVICE_KEY+"&strSrch=3").openConnection();
+		HttpURLConnection conn=(HttpURLConnection)new URL(URL+"getBusRouteList?ServiceKey="+SERVICE_KEY+"&strSrch="+request.getParameter("strSrch")).openConnection();
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Content-type", "application/json");
 		System.out.println("Response code: " + conn.getResponseCode());
@@ -108,7 +108,7 @@ String strUrl="";
 		Map<String, Object> mapResult = new HashMap<>();
 		mapResult.put("list",listItem);
 		mapResult.put("header",mapHeader);
-		mapResult.put("message",mapServiceResult.get("comMsgHeader"));
+		//mapResult.put("mapServiceResult",mapServiceResult);
 		//mapResult.put("mapServiceResult",mapServiceResult);
 		return mapResult;
 	}
