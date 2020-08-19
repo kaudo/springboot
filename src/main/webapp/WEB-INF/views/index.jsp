@@ -56,8 +56,10 @@ $(document).ready(function(){
 	var gKeyword='';
 	$('input[name="busRouteNm"]').bind('keyup',function(){
 		if(!$(this).val()) return false;
-		if($(this).val().charCodeAt($(this).val().length-1)>='ㄱ'.charCodeAt(0)
-				&& $(this).val().charCodeAt($(this).val().length-1)<='ㅎ'.charCodeAt(0)){
+		if( ($(this).val().charCodeAt($(this).val().length-1)>='ㄱ'.charCodeAt(0)
+				&& $(this).val().charCodeAt($(this).val().length-1)<='ㅎ'.charCodeAt(0) )
+		|| ($(this).val().charCodeAt($(this).val().length-1)>='ㅏ'.charCodeAt(0)
+           				&& $(this).val().charCodeAt($(this).val().length-1)<='ㅣ'.charCodeAt(0) )){
 			if($(this).val().substr(0,$(this).val().length-1)==gKeyword) return false;
 			gKeyword=$(this).val().substr(0,$(this).val().length-1);
 		}else gKeyword=$(this).val();
