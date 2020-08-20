@@ -29,8 +29,8 @@ h1.title{width:100%;font-size:25px;font-weight:bold;margin:10px 0 15px 5px;}
 
 .btnBusStop{margin:5px 0;}
 
-.areaBusStopLeft .btnBusStop{margin:5px 80px 5px 0;}
-.areaBusStopRight .btnBusStop{margin:5px 0 5px 80px;}
+.areaBusStopLeft .btnBusStop{margin:5px 180px 5px 0;}
+.areaBusStopRight .btnBusStop{margin:5px 0 5px 180px;}
 </style>
 
 <script src="/js/jquery-3.5.1.min.js"></script>
@@ -148,6 +148,8 @@ $(document).ready(function(){
 	btnClickSearch();
 
 });
+
+//https://art.pixilart.com/960866b766abc48.png
 </script>
 </head>
 <body>
@@ -182,9 +184,15 @@ github > gradle > war > java<br/>
 
 <div class="areaBusRoute"></div>
 
-<div class="areaBusStop" style="overflow:auto;width:100%;min-height:100px;background:url('/images/road.png') repeat-y 50% 50%">
+<div class="areaBusStop" style="overflow:auto;width:100%;min-height:100px;background:url('/images/road_vertical.png') repeat-y 50% 50%">
 	<div class="areaBusStopLeft" style="width:50%;float:left;text-align:right;"></div>
 	<div class="areaBusStopRight" style="width:50%;float:right;text-align:left;"></div>
+
+
+
+	<div class="asdfasdf" style="width:100%;height:100px;background:url('/images/road_bottom.png') no-repeat 50% 50%">
+    </div>
+
 </div>
 
 </div>
