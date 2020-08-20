@@ -26,11 +26,18 @@ img.alignnone{float:right;margin-left:5px;border:1px #333 solid;}
 h1.title{width:100%;font-size:25px;font-weight:bold;margin:10px 0 15px 5px;}
 .ulTab li{width:20%;height:30px;float:left;display:block;}
 .btnTab{letter-spacing:-1px;font-size:15px;font-weight:bold;width:100%;height:30px;border:0;text-align:left;padding-left:38px;line-height:13px;}
+
+.btnBusStop{margin:5px 0;}
+
+.areaBusStopLeft .btnBusStop{margin:5px 80px 5px 0;}
+.areaBusStopRight .btnBusStop{margin:5px 0 5px 80px;}
 </style>
 
 <script src="/js/jquery-3.5.1.min.js"></script>
 <script src="/js/data.js"></script>
 <script type="text/javascript">
+var gKeyword='';
+var gInitial=true;
 
 $(window).resize(resizeWindow=function(){
     $('#content').css({height:$('html').height()-$('#header').height()-$('#footer').height(),visibility:'visible'});
@@ -53,19 +60,19 @@ $(document).ready(function(){
     	return false;
 	});
 
-	var gKeyword='';
-	$('input[name="busRouteNm"]').bind('keyup',function(){
-		if(!$(this).val() || $(this).val().length<2){
+	$('input[name="keyword"]').bind('keyup',btnClickSearch=function(e){
+		var keyword=$('input[name="keyword"]').val();
+		if(!keyword || keyword.length</*2*/1){
 			$('.areaBusRoute').html('');
 			return false;
 		}
-		if( ($(this).val().charCodeAt($(this).val().length-1)>='ㄱ'.charCodeAt(0)
-				&& $(this).val().charCodeAt($(this).val().length-1)<='ㅎ'.charCodeAt(0) )
-		|| ($(this).val().charCodeAt($(this).val().length-1)>='ㅏ'.charCodeAt(0)
-           				&& $(this).val().charCodeAt($(this).val().length-1)<='ㅣ'.charCodeAt(0) )){
-			if($(this).val().substr(0,$(this).val().length-1)==gKeyword) return false;
-			gKeyword=$(this).val().substr(0,$(this).val().length-1);
-		}else gKeyword=$(this).val();
+		if( (keyword.charCodeAt(keyword.length-1)>='ㄱ'.charCodeAt(0)
+				&& keyword.charCodeAt(keyword.length-1)<='ㅎ'.charCodeAt(0) )
+		|| (keyword.charCodeAt(keyword.length-1)>='ㅏ'.charCodeAt(0)
+           		&& keyword.charCodeAt(keyword.length-1)<='ㅣ'.charCodeAt(0) )){
+			if(keyword.substr(0,keyword.length-1)==gKeyword) return false;
+			gKeyword=keyword.substr(0,keyword.length-1);
+		}else gKeyword=keyword;
 		$('.areaBusRoute').html('');
 		$.ajax({
 			url:'/getBusRouteList?strSrch='+gKeyword,
@@ -75,7 +82,6 @@ $(document).ready(function(){
 				$('.areaBusRoute').append('<div class="btnBusRoute" data-busRouteNm="'+data.list[i].busRouteNm+'">'+JSON.stringify(data.list[i])+'</div>');
 				$('.btnBusRoute:last').data('data',data.list[i]);
 			}
-
 
 			$('.btnBusRoute').unbind('click').click(function(){
 				console.log($(this),$(this).data('data').busRouteNm);
@@ -87,9 +93,24 @@ $(document).ready(function(){
 					console.log(data);
 					$('#loading').hide();
 
-					$('.areaBusStop').html('');
+					$('.areaBusStopLeft, .areaBusStopRight').html('');
+					var direction=data.list[0].direction;
+					var target=$('.areaBusStopLeft');
 					for(var i=0;i<data.list.length;i++){
-						$('.areaBusStop').append('<button class="btnBusStop">'+data.list[i].stationNm+'</button></br>');
+						//if(data.list[i].direction!=direction) target=$('.areaBusStopRight');
+						if(data.list[i].direction!=direction){
+							target=$('.areaBusStopRight');
+							direction=data.list[i].direction;
+							break;
+						}
+						target.append('<button class="btnBusStop">'+data.list[i].stationNm+'</button></br>');
+						$('.btnBusStop:last').data('data',data.list[i]);
+					}
+
+					for(var i=data.list.length-1;i>0;i=i-1){
+						//if(data.list[i].direction!=direction) target=$('.areaBusStopRight');
+						if(data.list[i].direction!=direction) break;
+						target.append('<button class="btnBusStop">'+data.list[i].stationNm+'</button></br>');
 						$('.btnBusStop:last').data('data',data.list[i]);
 					}
 
@@ -99,9 +120,13 @@ $(document).ready(function(){
 					});
 				});
 
-
 				return false;
 			});
+
+			if(gInitial){
+				$('.btnBusRoute:first').click();
+				gInitial=false;
+			}
 
 		});
 
@@ -119,6 +144,8 @@ $(document).ready(function(){
 	});
 
 	resizeWindow();
+	$('input[name="keyword"]').val('370');
+	btnClickSearch();
 
 });
 </script>
@@ -126,8 +153,6 @@ $(document).ready(function(){
 <body>
 
 <header id="header" style="">
-
-
     <h1>spring.kaudo.com</h1>
     <br/>
 springboot, jsp, jstl, jquery<br/>
@@ -138,7 +163,7 @@ github > gradle > war > java<br/>
 </header>
 <div id="container"><div id="wrapper"><div id="content">
 
-<div class="areaRoad" style="overflow:auto;width:100%;min-height:100px;background:url('/images/road.png') repeat-y 50% 50%">
+<div class="areaRoad" style="">
 
     <button class="btnBusList">버스번호</button>
 <a href="/getRouteInfoItem">getRouteInfoItem</a>
@@ -149,7 +174,7 @@ github > gradle > war > java<br/>
 <a href="getRouteInfo?busRouteId=100100506" target="_blank">getRouteInfo</a><br/>
 <a href="getRoutePath?busRouteId=100100506" target="_blank">getRoutePath</a><br/>
 
-<input type="tel" name="busRouteNm"/>
+<input type="tel" name="keyword" maxlength="5"/>
 
 <br/><br/>
 
@@ -157,7 +182,10 @@ github > gradle > war > java<br/>
 
 <div class="areaBusRoute"></div>
 
-<div class="areaBusStop"></div>
+<div class="areaBusStop" style="overflow:auto;width:100%;min-height:100px;background:url('/images/road.png') repeat-y 50% 50%">
+	<div class="areaBusStopLeft" style="width:50%;float:left;text-align:right;"></div>
+	<div class="areaBusStopRight" style="width:50%;float:right;text-align:left;"></div>
+</div>
 
 </div>
 
