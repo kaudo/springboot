@@ -29,8 +29,8 @@ h1.title{width:100%;font-size:25px;font-weight:bold;margin:10px 0 15px 5px;}
 
 .btnBusStop{margin:5px 0;}
 
-.areaBusStopLeft .btnBusStop{margin:5px 180px 5px 0;}
-.areaBusStopRight .btnBusStop{margin:5px 0 5px 180px;}
+.areaBusStopLeft .btnBusStop{margin:5px 130px 5px 0;}
+.areaBusStopRight .btnBusStop{margin:5px 0 5px 130px;}
 </style>
 
 <script src="/js/jquery-3.5.1.min.js"></script>
@@ -155,15 +155,13 @@ $(document).ready(function(){
 <body>
 
 <header id="header" style="">
-    <h1>spring.kaudo.com</h1>
-    <br/>
+    <h1 style="line-height:32px;padding:0;margin:0;">spring.kaudo.com</h1>
 springboot, jsp, jstl, jquery<br/>
 aws, ec2, mariadb<br/>
 github > gradle > war > java<br/>
-    ${result}
-
 </header>
 <div id="container"><div id="wrapper"><div id="content">
+${result}
 
 <div class="areaRoad" style="">
 
@@ -184,19 +182,14 @@ github > gradle > war > java<br/>
 
 <div class="areaBusRoute"></div>
 
-<div class="areaBusStop" style="overflow:auto;width:100%;min-height:100px;background:url('/images/road_vertical.png') repeat-y 50% 50%">
+<div class="areaBusStop" style="overflow:auto;width:100%;min-height:100px;background:url('/images/road_vertical.png') repeat-y 50% 50% / 250px;">
 	<div class="areaBusStopLeft" style="width:50%;float:left;text-align:right;"></div>
 	<div class="areaBusStopRight" style="width:50%;float:right;text-align:left;"></div>
-
-
-
-	<div class="asdfasdf" style="width:100%;height:100px;background:url('/images/road_bottom.png') no-repeat 50% 50%">
-    </div>
-
 </div>
 
+	<div class="areaRoadBottom" style="width:100%;height:230px;background:url('/images/road_bottom.png') no-repeat 50% 50% / 250px;margin-top:-215px;"></div>
+	<br/>
 </div>
-
 </div></div></div>
 <div id="footer"></div>
 </body>
